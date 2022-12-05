@@ -7,12 +7,13 @@ pool.on("error", (err) => {
 });
 
 module.exports = {
-  getDatastaff(req, res) {
+  // Ambil data semua detail_pembayaran
+  getDataDetail(req, res) {
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                CALL GetAllStaff();
+                SELECT * FROM detail_pembayaran;
                 `,
         function (error, results) {
           if (error) throw error;
@@ -26,14 +27,14 @@ module.exports = {
       connection.release();
     });
   },
-  //    fungsi untuk DatastaffByID
-  getDatastaffByID(req, res) {
+  // Ambil data detail_pembayaran berdasarkan ID
+  getDataDetailByID(req, res) {
     let id = req.params.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                SELECT * FROM staff WHERE id_staff = ?;
+                SELECT * from detail_pembayaran where id_detail = ?;
                 `,
         [id],
         function (error, results) {
@@ -48,14 +49,21 @@ module.exports = {
       connection.release();
     });
   },
-
-  addDatastaff(req, res) {
-    let data = [req.body.nama, req.body.alamat, req.body.no_hp];
+  // Simpan data detail_pembayaran
+  addDataDetail(req, res) {
+    let data = [
+      req.body.id_pembayaran,
+      req.body.id_mobil,
+      req.body.id_warna,
+      req.body.harga,
+      req.body.jumlah_pembelian,
+    ];
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                call insert_staff(?);
+                call insert_detail_pembayaran_rill(?);
+
                 `,
         [data],
         function (error, results) {
@@ -69,18 +77,21 @@ module.exports = {
       connection.release();
     });
   },
-  editDatastaff(req, res) {
+  // Update data detail_pembayaran
+  editDataDetail(req, res) {
     let dataEdit = {
-      nama: req.body.nama,
-      alamat: req.body.alamat,
-      no_hp: req.body.no_hp,
+      id_pembayaran: req.body.id_pembayaran,
+      id_mobil: req.body.id_mobil,
+      id_warna: req.body.id_warna,
+      harga: req.body.harga,
+      jumlah_pembelian: req.body.jumlah_pembelian,
     };
     let id = req.body.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                UPDATE staff SET ? WHERE id_staff = ?;
+                UPDATE detail_pembayaran SET ? WHERE id_detail = ?;
                 `,
         [dataEdit, id],
         function (error, results) {
@@ -94,13 +105,14 @@ module.exports = {
       connection.release();
     });
   },
-  deleteDatastaff(req, res) {
+  // Delete data detail_pembayaran
+  deleteDataDetail(req, res) {
     let id = req.body.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                call detele_staff(?);
+                call detele_detail_pembayaran(?);
                 `,
         [id],
         function (error, results) {

@@ -7,12 +7,13 @@ pool.on("error", (err) => {
 });
 
 module.exports = {
-  getDatastaff(req, res) {
+  // Ambil data semua detail_pembayaran
+  getDataStock(req, res) {
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                CALL GetAllStaff();
+                SELECT * FROM warna_mobil;
                 `,
         function (error, results) {
           if (error) throw error;
@@ -26,14 +27,14 @@ module.exports = {
       connection.release();
     });
   },
-  //    fungsi untuk DatastaffByID
-  getDatastaffByID(req, res) {
+  // Ambil data detail_pembayaran berdasarkan ID
+  getDataStockByID(req, res) {
     let id = req.params.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                SELECT * FROM staff WHERE id_staff = ?;
+                SELECT * from warna_mobil where id_warna = ?;
                 `,
         [id],
         function (error, results) {
@@ -48,14 +49,18 @@ module.exports = {
       connection.release();
     });
   },
-
-  addDatastaff(req, res) {
-    let data = [req.body.nama, req.body.alamat, req.body.no_hp];
+  // Simpan data detail_pembayaran
+  addDataStock(req, res) {
+    let data = [
+      req.body.id_mobil,
+      req.body.warna,
+      req.body.stock,
+    ];
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                call insert_staff(?);
+                call insert_warna(?);
                 `,
         [data],
         function (error, results) {
@@ -69,18 +74,19 @@ module.exports = {
       connection.release();
     });
   },
-  editDatastaff(req, res) {
+  // Update data detail_pembayaran
+  editDataStock(req, res) {
     let dataEdit = {
-      nama: req.body.nama,
-      alamat: req.body.alamat,
-      no_hp: req.body.no_hp,
+      id_mobil: req.body.id_mobil,
+      warna: req.body.warna,
+      stock: req.body.stock,
     };
     let id = req.body.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                UPDATE staff SET ? WHERE id_staff = ?;
+                UPDATE warna_mobil SET ? WHERE id_warna = ?;
                 `,
         [dataEdit, id],
         function (error, results) {
@@ -94,13 +100,14 @@ module.exports = {
       connection.release();
     });
   },
-  deleteDatastaff(req, res) {
+  // Delete data detail_pembayaran
+  deleteDataStock(req, res) {
     let id = req.body.id;
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                call detele_staff(?);
+                call detele_stock(?);
                 `,
         [id],
         function (error, results) {

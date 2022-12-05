@@ -7,7 +7,7 @@ pool.on('error',(err)=> {
 });
 
 module.exports ={
-    // Ambil data semua karyawan
+    // Ambil data semua mobil
     getDataMobil(req,res){
         pool.getConnection(function(err, connection) {
             if (err) throw err;
@@ -26,7 +26,7 @@ module.exports ={
             connection.release();
         })
     },
-    // Ambil data karyawan berdasarkan ID
+    // Ambil data mobil berdasarkan ID
     getDataMobilByID(req,res){
         let id = req.params.id;
         pool.getConnection(function(err, connection) {
@@ -47,7 +47,7 @@ module.exports ={
             connection.release();
         })
     },
-    // Simpan data karyawan
+    // Simpan data mobil
     addDataMobil(req,res){
         let data = {
             nama_mobil : req.body.nama,
@@ -75,7 +75,7 @@ module.exports ={
             connection.release();
         })
     },
-    // Update data karyawan
+    // Update data mobil
     editDataMobil(req,res){
         let dataEdit = {
             nama_mobil : req.body.nama,
@@ -104,14 +104,14 @@ module.exports ={
             connection.release();
         })
     },
-    // Delete data karyawan
+    // Delete data mobil
     deleteDataMobil(req,res){
         let id = req.body.id
         pool.getConnection(function(err, connection) {
             if (err) throw err;
             connection.query(
                 `
-                DELETE FROM mobil WHERE id_mobil = ?;
+                call detele_mobil(?);
                 `
             , [id],
             function (error, results) {

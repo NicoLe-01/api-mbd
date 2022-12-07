@@ -70,19 +70,19 @@ module.exports = {
     });
   },
   editDatastaff(req, res) {
-    let dataEdit = {
-      nama: req.body.nama,
-      alamat: req.body.alamat,
-      no_hp: req.body.no_hp,
-    };
-    let id = req.body.id;
+    let dataEdit = [
+      req.body.id,
+      req.body.nama,
+      req.body.alamat,
+      req.body.no_hp,
+    ];
     pool.getConnection(function (err, connection) {
       if (err) throw err;
       connection.query(
         `
-                UPDATE staff SET ? WHERE id_staff = ?;
+                call update_staff(?);
                 `,
-        [dataEdit, id],
+        [dataEdit],
         function (error, results) {
           if (error) throw error;
           res.send({

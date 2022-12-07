@@ -51,6 +51,7 @@ module.exports = {
   },
   // Simpan data detail_pembayaran
   addDataStock(req, res) {
+    
     let data = [
       req.body.id_mobil,
       req.body.warna,
